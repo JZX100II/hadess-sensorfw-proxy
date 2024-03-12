@@ -7,9 +7,9 @@ Build-Depends: cmake (>= 2.8.10),
                libglib2.0-dev,
                libgudev-1.0-dev,
                pkg-config,
-               sensorfw-qt5,
+               sensorfw-qt6,
                systemd,
-               qtbase5-dev,
+               qt6-base-dev,
 Maintainer: Erfan Abdi <erfangplus@gmail.com>
 Standards-Version: 3.9.5
 Homepage: https://github.com/droidian/hadess-sensorfw-proxy
@@ -20,7 +20,7 @@ Architecture: any
 Pre-Depends: iio-sensor-proxy,
 Depends: ${misc:Depends},
          ${shlibs:Depends},
-         libsensorfw-qt5-plugins,
-         libsensorfw-qt5-hybris,
+         libsensorfw-qt6-plugins,
+         libsensorfw-qt6-hybris,
 Description: Sensorfw sensors to hadess iio proxy adaptor
  Sensorfw sensors to hadess iio proxy adaptor
