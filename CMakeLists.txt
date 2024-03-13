@@ -12,8 +12,8 @@ pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(GIO_UNIX REQUIRED gio-unix-2.0)
 pkg_check_modules(GUDEV REQUIRED gudev-1.0)
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Network REQUIRED)
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Network REQUIRED)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -pthread")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pthread")
