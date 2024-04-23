@@ -99,30 +99,57 @@ const char* repowerd::Sensorfw::plugin_path() const
 bool repowerd::Sensorfw::load_plugin()
 {
     int constexpr timeout_default = 100;
-    auto const result =  g_dbus_connection_call_sync(
-            dbus_connection,
-            dbus_sensorfw_name,
-            dbus_sensorfw_path,
-            dbus_sensorfw_interface,
-            "loadPlugin",
-            g_variant_new("(s)", plugin_string()),
-            G_VARIANT_TYPE("(b)"),
-            G_DBUS_CALL_FLAGS_NONE,
-            timeout_default,
-            NULL,
-            NULL);
+    int constexpr max_attempts = 5;
+    GVariant* result = nullptr;
+    gboolean the_result = false;
+    int attempt = 0;
 
-    if (!result)
+    while (attempt < max_attempts)
     {
-        log->log(log_tag, "failed to call load_plugin");
-        return false;
+        result = g_dbus_connection_call_sync(
+                dbus_connection,
+                dbus_sensorfw_name,
+                dbus_sensorfw_path,
+                dbus_sensorfw_interface,
+                "loadPlugin",
+                g_variant_new("(s)", plugin_string()),
+                G_VARIANT_TYPE("(b)"),
+                G_DBUS_CALL_FLAGS_NONE,
+                timeout_default,
+                NULL,
+                NULL);
+
+        attempt++;
+
+        if (result)
+        {
+            g_variant_get(result, "(b)", &the_result);
+            g_variant_unref(result);
+
+            if (the_result)
+            {
+                std::string message = "Attempt " + std::to_string(attempt) + ": Success, loaded plugin: " + plugin_string();
+                log->log(log_tag, "%s", message.c_str());
+                return true;
+            }
+            else
+            {
+                std::string message = "Attempt " + std::to_string(attempt) + ": Failed to load plugin: " + plugin_string();
+                log->log(log_tag, "%s", message.c_str());
+            }
+        }
+        else
+        {
+            // in case sensorfwd bus is not even up we'll end up here
+            std::string message = "Attempt " + std::to_string(attempt) + ": Failed, D-Bus Sensorfw not available (Name: " + dbus_sensorfw_name + ", Path: " + dbus_sensorfw_path + ")";
+            log->log(log_tag, "%s", message.c_str());
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-    gboolean the_result;
-    g_variant_get(result, "(b)", &the_result);
-    g_variant_unref(result);
-
-    return the_result;
+    log->log(log_tag, "All attempts failed to load plugin");
+    return false;
 }
 
 void repowerd::Sensorfw::request_sensor()

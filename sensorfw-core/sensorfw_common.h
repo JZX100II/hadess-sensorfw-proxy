@@ -19,6 +19,7 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include <chrono>
 
 #include "dbus_connection_handle.h"
 #include "dbus_event_loop.h"
