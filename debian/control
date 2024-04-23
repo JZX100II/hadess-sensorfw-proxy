@@ -1,8 +1,8 @@
 Source: hadess-sensorfw-proxy
 Section: admin
 Priority: optional
-Build-Depends: cmake (>= 2.8.10),
-               debhelper (>= 11),
+Build-Depends: cmake,
+               debhelper-compat (= 13),
                dbus,
                libglib2.0-dev,
                libgudev-1.0-dev,
@@ -10,8 +10,8 @@ Build-Depends: cmake (>= 2.8.10),
                sensorfw-qt6,
                systemd,
                qt6-base-dev,
-Maintainer: Erfan Abdi <erfangplus@gmail.com>
-Standards-Version: 3.9.5
+Maintainer: Bardia Moshiri <fakeshell@bardia.tech>
+Standards-Version: 4.6.1
 Homepage: https://github.com/droidian/hadess-sensorfw-proxy
 
 Package: hadess-sensorfw-proxy
