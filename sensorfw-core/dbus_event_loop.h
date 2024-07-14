@@ -23,7 +23,7 @@
 
 #include <gio/gio.h>
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 using DBusEventLoopMethodCallHandler =

@@ -21,7 +21,7 @@
 #include "orientation_sensor.h"
 #include "sensorfw_common.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class SensorfwOrientationSensor : public OrientationSensor, public Sensorfw

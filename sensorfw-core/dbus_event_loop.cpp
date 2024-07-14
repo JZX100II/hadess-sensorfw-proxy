@@ -25,7 +25,7 @@ namespace
 
 // Send a synchronous request to ensure all previous requests have
 // reached the dbus daemon
-void repowerd_g_dbus_connection_wait_for_requests(GDBusConnection* connection)
+void sensorfw_proxy_g_dbus_connection_wait_for_requests(GDBusConnection* connection)
 {
     int const timeout_default = -1;
     auto const null_cancellable = nullptr;

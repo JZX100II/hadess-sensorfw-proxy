@@ -20,7 +20,7 @@
 
 #include "handler_registration.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 enum class ProximityState{near, far};

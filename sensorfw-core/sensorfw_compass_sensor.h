@@ -21,7 +21,7 @@
 #include "compass_sensor.h"
 #include "sensorfw_common.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class SensorfwCompassSensor : public CompassSensor, public Sensorfw

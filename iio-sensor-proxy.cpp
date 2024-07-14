@@ -49,23 +49,23 @@ typedef struct {
 	/* Orientation */
 	OrientationUp previous_orientation;
 	gboolean accel_avaliable;
-	std::shared_ptr<repowerd::OrientationSensor> orientation_sensor;
+	std::shared_ptr<sensorfw_proxy::OrientationSensor> orientation_sensor;
 
 	/* Light */
 	gdouble previous_level;
 	gboolean uses_lux;
 	gboolean light_avaliable;
-	std::shared_ptr<repowerd::LightSensor> light_sensor;
+	std::shared_ptr<sensorfw_proxy::LightSensor> light_sensor;
 
 	/* Compass */
 	gdouble previous_heading;
 	gboolean compass_avaliable;
-	std::shared_ptr<repowerd::CompassSensor> compass_sensor;
+	std::shared_ptr<sensorfw_proxy::CompassSensor> compass_sensor;
 
 	/* Proximity */
 	gboolean previous_prox_near;
 	gboolean prox_avaliable;
-	std::shared_ptr<repowerd::ProximitySensor> proximity_sensor;
+	std::shared_ptr<sensorfw_proxy::ProximitySensor> proximity_sensor;
 } SensorData;
 
 static const char *
@@ -723,11 +723,11 @@ free_sensor_data (SensorData *data)
 static void
 setup_sensors (SensorData *data)
 {
-	auto const log = std::make_shared<repowerd::ConsoleLog>();
+	auto const log = std::make_shared<sensorfw_proxy::ConsoleLog>();
 
 	try
 	{
-		data->proximity_sensor = std::make_shared<repowerd::SensorfwProximitySensor>(log,
+		data->proximity_sensor = std::make_shared<sensorfw_proxy::SensorfwProximitySensor>(log,
 			the_dbus_bus_address());
 		data->prox_avaliable = TRUE;
 	}
@@ -739,7 +739,7 @@ setup_sensors (SensorData *data)
 
 	try
 	{
-		data->light_sensor = std::make_shared<repowerd::SensorfwLightSensor>(log,
+		data->light_sensor = std::make_shared<sensorfw_proxy::SensorfwLightSensor>(log,
 			the_dbus_bus_address());
 		data->light_avaliable = TRUE;
 	}
@@ -751,7 +751,7 @@ setup_sensors (SensorData *data)
 
 	try
 	{
-		data->orientation_sensor = std::make_shared<repowerd::SensorfwOrientationSensor>(log,
+		data->orientation_sensor = std::make_shared<sensorfw_proxy::SensorfwOrientationSensor>(log,
 			the_dbus_bus_address());
 		data->accel_avaliable = TRUE;
 	}
@@ -763,7 +763,7 @@ setup_sensors (SensorData *data)
 
 	try
 	{
-		data->compass_sensor = std::make_shared<repowerd::SensorfwCompassSensor>(log,
+		data->compass_sensor = std::make_shared<sensorfw_proxy::SensorfwCompassSensor>(log,
 			the_dbus_bus_address());
 		data->compass_avaliable = TRUE;
 	}
@@ -787,15 +787,15 @@ int main (int argc, char **argv)
 	setup_dbus (data);
 
 	setup_sensors(data);
-	repowerd::HandlerRegistration prox_registration;
-	repowerd::HandlerRegistration light_registration;
-	repowerd::HandlerRegistration orientation_registration;
-	repowerd::HandlerRegistration compass_registration;
+	sensorfw_proxy::HandlerRegistration prox_registration;
+	sensorfw_proxy::HandlerRegistration light_registration;
+	sensorfw_proxy::HandlerRegistration orientation_registration;
+	sensorfw_proxy::HandlerRegistration compass_registration;
 
 	if (data->prox_avaliable && data->proximity_sensor) {
 		prox_registration = data->proximity_sensor->register_proximity_handler(
-			[data](repowerd::ProximityState state) {
-				data->previous_prox_near = (state == repowerd::ProximityState::near);
+			[data](sensorfw_proxy::ProximityState state) {
+				data->previous_prox_near = (state == sensorfw_proxy::ProximityState::near);
 				send_dbus_event(data, PROP_PROXIMITY_NEAR);
 			});
 	} else if (data->prox_avaliable) {
@@ -818,24 +818,24 @@ int main (int argc, char **argv)
 
 	if (data->accel_avaliable && data->orientation_sensor) {
 		orientation_registration = data->orientation_sensor->register_orientation_handler(
-			[data](repowerd::OrientationData value) {
+			[data](sensorfw_proxy::OrientationData value) {
 				OrientationUp orientation = data->previous_orientation;
 				switch (value)
 				{
-				case repowerd::OrientationData::LeftUp:
+				case sensorfw_proxy::OrientationData::LeftUp:
 					orientation = ORIENTATION_LEFT_UP;
 					break;
-				case repowerd::OrientationData::RightUp:
+				case sensorfw_proxy::OrientationData::RightUp:
 					orientation = ORIENTATION_RIGHT_UP;
 					break;
-				case repowerd::OrientationData::BottomUp:
+				case sensorfw_proxy::OrientationData::BottomUp:
 					orientation = ORIENTATION_BOTTOM_UP;
 					break;
-				case repowerd::OrientationData::BottomDown:
+				case sensorfw_proxy::OrientationData::BottomDown:
 					orientation = ORIENTATION_NORMAL;
 					break;
-				case repowerd::OrientationData::FaceDown:
-				case repowerd::OrientationData::FaceUp:
+				case sensorfw_proxy::OrientationData::FaceDown:
+				case sensorfw_proxy::OrientationData::FaceUp:
 					/* Skip FaceDown/FaceUp events */
 					break;
 				default:

@@ -22,7 +22,7 @@
 #include <ctime>
 #include <string>
 
-void repowerd::ConsoleLog::log(char const* tag, char const* format, ...)
+void sensorfw_proxy::ConsoleLog::log(char const* tag, char const* format, ...)
 {
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);

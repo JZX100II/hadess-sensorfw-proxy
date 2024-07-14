@@ -21,7 +21,7 @@
 #include "proximity_sensor.h"
 #include "sensorfw_common.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class SensorfwProximitySensor : public ProximitySensor, public Sensorfw
@@ -41,7 +41,7 @@ private:
     void data_recived_impl() override;
 
     ProximityHandler m_handler;
-    repowerd::ProximityState m_state;
+    sensorfw_proxy::ProximityState m_state;
 };
 
 }

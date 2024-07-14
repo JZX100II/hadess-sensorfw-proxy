@@ -26,7 +26,7 @@ namespace
 auto const null_handler = [](double){};
 }
 
-repowerd::SensorfwLightSensor::SensorfwLightSensor(
+sensorfw_proxy::SensorfwLightSensor::SensorfwLightSensor(
     std::shared_ptr<Log> const& log,
     std::string const& dbus_bus_address)
     : Sensorfw(log, dbus_bus_address, "Light", PluginType::LIGHT),
@@ -34,7 +34,7 @@ repowerd::SensorfwLightSensor::SensorfwLightSensor(
 {
 }
 
-repowerd::HandlerRegistration repowerd::SensorfwLightSensor::register_light_handler(
+sensorfw_proxy::HandlerRegistration sensorfw_proxy::SensorfwLightSensor::register_light_handler(
     LightHandler const& handler)
 {
     return EventLoopHandlerRegistration{
@@ -43,7 +43,7 @@ repowerd::HandlerRegistration repowerd::SensorfwLightSensor::register_light_hand
         [this]{ this->handler = null_handler; }};
 }
 
-void repowerd::SensorfwLightSensor::enable_light_events()
+void sensorfw_proxy::SensorfwLightSensor::enable_light_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -52,7 +52,7 @@ void repowerd::SensorfwLightSensor::enable_light_events()
         }).get();
 }
 
-void repowerd::SensorfwLightSensor::disable_light_events()
+void sensorfw_proxy::SensorfwLightSensor::disable_light_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -61,7 +61,7 @@ void repowerd::SensorfwLightSensor::disable_light_events()
         }).get();
 }
 
-void repowerd::SensorfwLightSensor::data_recived_impl()
+void sensorfw_proxy::SensorfwLightSensor::data_recived_impl()
 {
     QVector<TimedUnsigned> values;
     if (!m_socket->read<TimedUnsigned>(values))

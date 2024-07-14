@@ -23,10 +23,10 @@
 
 namespace
 {
-auto const null_handler = [](repowerd::ProximityState){};
+auto const null_handler = [](sensorfw_proxy::ProximityState){};
 }
 
-repowerd::SensorfwProximitySensor::SensorfwProximitySensor(
+sensorfw_proxy::SensorfwProximitySensor::SensorfwProximitySensor(
     std::shared_ptr<Log> const& log,
     std::string const& dbus_bus_address)
     : Sensorfw(log, dbus_bus_address, "Proximity", PluginType::PROXIMITY),
@@ -35,7 +35,7 @@ repowerd::SensorfwProximitySensor::SensorfwProximitySensor(
 {
 }
 
-repowerd::HandlerRegistration repowerd::SensorfwProximitySensor::register_proximity_handler(
+sensorfw_proxy::HandlerRegistration sensorfw_proxy::SensorfwProximitySensor::register_proximity_handler(
     ProximityHandler const& handler)
 {
     return EventLoopHandlerRegistration{
@@ -44,7 +44,7 @@ repowerd::HandlerRegistration repowerd::SensorfwProximitySensor::register_proxim
         [this]{ this->m_handler = null_handler; }};
 }
 
-void repowerd::SensorfwProximitySensor::enable_proximity_events()
+void sensorfw_proxy::SensorfwProximitySensor::enable_proximity_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -53,7 +53,7 @@ void repowerd::SensorfwProximitySensor::enable_proximity_events()
         }).get();
 }
 
-void repowerd::SensorfwProximitySensor::disable_proximity_events()
+void sensorfw_proxy::SensorfwProximitySensor::disable_proximity_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -62,7 +62,7 @@ void repowerd::SensorfwProximitySensor::disable_proximity_events()
         }).get();
 }
 
-void repowerd::SensorfwProximitySensor::data_recived_impl()
+void sensorfw_proxy::SensorfwProximitySensor::data_recived_impl()
 {
     QVector<ProximityData> values;
     if (m_socket->read<ProximityData>(values))
@@ -73,7 +73,7 @@ void repowerd::SensorfwProximitySensor::data_recived_impl()
     m_handler(m_state);
 }
 
-repowerd::ProximityState repowerd::SensorfwProximitySensor::proximity_state()
+sensorfw_proxy::ProximityState sensorfw_proxy::SensorfwProximitySensor::proximity_state()
 {
     return m_state;
 }

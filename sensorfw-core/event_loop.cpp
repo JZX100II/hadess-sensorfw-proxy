@@ -80,7 +80,7 @@ struct GSourceFdContext
 
 }
 
-repowerd::EventLoop::EventLoop(std::string const& name)
+sensorfw_proxy::EventLoop::EventLoop(std::string const& name)
     : main_context{g_main_context_new()},
       main_loop{g_main_loop_new(main_context, FALSE)}
 {
@@ -96,12 +96,12 @@ repowerd::EventLoop::EventLoop(std::string const& name)
     enqueue([]{}).wait();
 }
 
-repowerd::EventLoop::~EventLoop()
+sensorfw_proxy::EventLoop::~EventLoop()
 {
     stop();
 }
 
-void repowerd::EventLoop::stop()
+void sensorfw_proxy::EventLoop::stop()
 {
     if (main_loop)
         g_main_loop_quit(main_loop);
@@ -119,7 +119,7 @@ void repowerd::EventLoop::stop()
     }
 }
 
-std::future<void> repowerd::EventLoop::enqueue(std::function<void()> const& callback)
+std::future<void> sensorfw_proxy::EventLoop::enqueue(std::function<void()> const& callback)
 {
     auto const gsource = g_idle_source_new();
     auto const ctx = new GSourceContext{callback};

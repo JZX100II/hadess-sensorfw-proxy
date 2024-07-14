@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 using EventLoopCancellation = std::function<void()>;

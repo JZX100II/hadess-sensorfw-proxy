@@ -24,7 +24,7 @@
 #include "log.h"
 
 class SocketReader;
-namespace repowerd {
+namespace sensorfw_proxy {
 class Sensorfw {
 public:
     enum PluginType

@@ -20,7 +20,7 @@
 
 #include <functional>
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class HandlerRegistration

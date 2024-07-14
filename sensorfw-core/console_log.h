@@ -20,7 +20,7 @@
 
 #include "log.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class ConsoleLog : public Log

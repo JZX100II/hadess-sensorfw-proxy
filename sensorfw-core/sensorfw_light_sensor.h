@@ -21,7 +21,7 @@
 #include "light_sensor.h"
 #include "sensorfw_common.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class SensorfwLightSensor : public LightSensor, public Sensorfw

@@ -22,7 +22,7 @@
 
 #include <string>
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class DBusConnectionHandle

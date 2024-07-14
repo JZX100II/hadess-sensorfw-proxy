@@ -29,7 +29,7 @@ char const* const dbus_sensorfw_path = "/SensorManager";
 char const* const dbus_sensorfw_interface = "local.SensorManager";
 }
 
-repowerd::Sensorfw::Sensorfw(
+sensorfw_proxy::Sensorfw::Sensorfw(
     std::shared_ptr<Log> const& log,
     std::string const& dbus_bus_address,
     std::string const& name,
@@ -53,14 +53,14 @@ repowerd::Sensorfw::Sensorfw(
     m_socket->initiateConnection(m_sessionid);
 }
 
-repowerd::Sensorfw::~Sensorfw()
+sensorfw_proxy::Sensorfw::~Sensorfw()
 {
     stop();
     release_sensor();
     m_socket->dropConnection();
 }
 
-const char* repowerd::Sensorfw::plugin_string() const
+const char* sensorfw_proxy::Sensorfw::plugin_string() const
 {
     switch (m_plugin) {
         case PluginType::LIGHT: return "alssensor";
@@ -72,7 +72,7 @@ const char* repowerd::Sensorfw::plugin_string() const
     return "";
 }
 
-const char* repowerd::Sensorfw::plugin_interface() const
+const char* sensorfw_proxy::Sensorfw::plugin_interface() const
 {
     switch (m_plugin) {
         case PluginType::LIGHT: return "local.ALSSensor";
@@ -84,7 +84,7 @@ const char* repowerd::Sensorfw::plugin_interface() const
     return "";
 }
 
-const char* repowerd::Sensorfw::plugin_path() const
+const char* sensorfw_proxy::Sensorfw::plugin_path() const
 {
     char *new_str;
     if (asprintf(&new_str,"%s/%s", dbus_sensorfw_path, plugin_string()) == -1)
@@ -93,7 +93,7 @@ const char* repowerd::Sensorfw::plugin_path() const
     return new_str;
 }
 
-bool repowerd::Sensorfw::load_plugin()
+bool sensorfw_proxy::Sensorfw::load_plugin()
 {
     int constexpr timeout_default = 100;
     int constexpr max_attempts = 5;
@@ -149,7 +149,7 @@ bool repowerd::Sensorfw::load_plugin()
     return false;
 }
 
-void repowerd::Sensorfw::request_sensor()
+void sensorfw_proxy::Sensorfw::request_sensor()
 {
     int constexpr timeout_default = 100;
     auto const result =  g_dbus_connection_call_sync(
@@ -180,7 +180,7 @@ void repowerd::Sensorfw::request_sensor()
     log->log(log_tag, "Got new plugin for %s with pid %i and session %i", plugin_string(), m_pid, m_sessionid);
 }
 
-bool repowerd::Sensorfw::release_sensor()
+bool sensorfw_proxy::Sensorfw::release_sensor()
 {
     int constexpr timeout_default = 100;
     auto const result =  g_dbus_connection_call_sync(
@@ -209,7 +209,7 @@ bool repowerd::Sensorfw::release_sensor()
     return the_result;
 }
 
-void repowerd::Sensorfw::start()
+void sensorfw_proxy::Sensorfw::start()
 {
     if (m_running)
         return;
@@ -247,7 +247,7 @@ void repowerd::Sensorfw::start()
     g_variant_unref(result);
 }
 
-void repowerd::Sensorfw::stop()
+void sensorfw_proxy::Sensorfw::stop()
 {
     if (!m_running)
         return;

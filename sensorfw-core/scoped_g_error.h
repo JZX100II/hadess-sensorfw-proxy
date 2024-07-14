@@ -18,7 +18,7 @@
 
 #pragma once
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 struct ScopedGError

@@ -21,9 +21,9 @@
 
 #include <stdexcept>
 
-repowerd::DBusConnectionHandle::DBusConnectionHandle(std::string const& address)
+sensorfw_proxy::DBusConnectionHandle::DBusConnectionHandle(std::string const& address)
 {
-    repowerd::ScopedGError error;
+    sensorfw_proxy::ScopedGError error;
 
     connection = g_dbus_connection_new_for_address_sync(
         address.c_str(),
@@ -42,12 +42,12 @@ repowerd::DBusConnectionHandle::DBusConnectionHandle(std::string const& address)
     }
 }
 
-repowerd::DBusConnectionHandle::~DBusConnectionHandle()
+sensorfw_proxy::DBusConnectionHandle::~DBusConnectionHandle()
 {
     g_dbus_connection_close_sync(connection, nullptr, nullptr);
 }
 
-repowerd::DBusConnectionHandle::operator GDBusConnection*() const
+sensorfw_proxy::DBusConnectionHandle::operator GDBusConnection*() const
 {
     return connection;
 }

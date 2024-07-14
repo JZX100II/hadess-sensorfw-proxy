@@ -23,29 +23,29 @@ namespace
 auto const null_unregister = []{};
 }
 
-repowerd::HandlerRegistration::HandlerRegistration()
+sensorfw_proxy::HandlerRegistration::HandlerRegistration()
     : unregister{null_unregister}
 {
 }
 
-repowerd::HandlerRegistration::HandlerRegistration(std::function<void()> const& unregister)
+sensorfw_proxy::HandlerRegistration::HandlerRegistration(std::function<void()> const& unregister)
     : unregister{unregister}
 {
 }
 
-repowerd::HandlerRegistration::~HandlerRegistration()
+sensorfw_proxy::HandlerRegistration::~HandlerRegistration()
 {
     unregister();
 }
 
-repowerd::HandlerRegistration::HandlerRegistration(HandlerRegistration&& other)
+sensorfw_proxy::HandlerRegistration::HandlerRegistration(HandlerRegistration&& other)
     : unregister{std::move(other.unregister)}
 {
     other.unregister = null_unregister;
 }
 
-repowerd::HandlerRegistration&
-repowerd::HandlerRegistration::operator=(HandlerRegistration&& other)
+sensorfw_proxy::HandlerRegistration&
+sensorfw_proxy::HandlerRegistration::operator=(HandlerRegistration&& other)
 {
     if (&other != this)
     {

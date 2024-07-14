@@ -23,10 +23,10 @@
 
 namespace
 {
-auto const null_handler = [](repowerd::OrientationData){};
+auto const null_handler = [](sensorfw_proxy::OrientationData){};
 }
 
-repowerd::SensorfwOrientationSensor::SensorfwOrientationSensor(
+sensorfw_proxy::SensorfwOrientationSensor::SensorfwOrientationSensor(
     std::shared_ptr<Log> const &log,
     std::string const &dbus_bus_address)
     : Sensorfw(log, dbus_bus_address, "Orientation", PluginType::ORIENTATION),
@@ -34,7 +34,7 @@ repowerd::SensorfwOrientationSensor::SensorfwOrientationSensor(
 {
 }
 
-repowerd::HandlerRegistration repowerd::SensorfwOrientationSensor::register_orientation_handler(
+sensorfw_proxy::HandlerRegistration sensorfw_proxy::SensorfwOrientationSensor::register_orientation_handler(
     OrientationHandler const &handler)
 {
     return EventLoopHandlerRegistration{
@@ -43,7 +43,7 @@ repowerd::HandlerRegistration repowerd::SensorfwOrientationSensor::register_orie
         [this]{ this->handler = null_handler; }};
 }
 
-void repowerd::SensorfwOrientationSensor::enable_orientation_events()
+void sensorfw_proxy::SensorfwOrientationSensor::enable_orientation_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -52,7 +52,7 @@ void repowerd::SensorfwOrientationSensor::enable_orientation_events()
         }).get();
 }
 
-void repowerd::SensorfwOrientationSensor::disable_orientation_events()
+void sensorfw_proxy::SensorfwOrientationSensor::disable_orientation_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -61,12 +61,12 @@ void repowerd::SensorfwOrientationSensor::disable_orientation_events()
         }).get();
 }
 
-void repowerd::SensorfwOrientationSensor::data_recived_impl()
+void sensorfw_proxy::SensorfwOrientationSensor::data_recived_impl()
 {
     QVector<PoseData> values;
-    repowerd::OrientationData output;
+    sensorfw_proxy::OrientationData output;
     if (m_socket->read<PoseData>(values))
-        output = (repowerd::OrientationData) values[0].orientation_;
+        output = (sensorfw_proxy::OrientationData) values[0].orientation_;
 
     handler(output);
 }

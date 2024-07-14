@@ -21,14 +21,14 @@
 #include "handler_registration.h"
 #include "event_loop.h"
 
-namespace repowerd
+namespace sensorfw_proxy
 {
 
 class EventLoopHandlerRegistration : public HandlerRegistration
 {
 public:
     EventLoopHandlerRegistration(
-        repowerd::EventLoop& loop,
+        sensorfw_proxy::EventLoop& loop,
         std::function<void()> const& register_func,
         std::function<void()> const& unregister)
         : HandlerRegistration{[&, unregister] { loop.enqueue(unregister).wait(); }}
@@ -37,7 +37,7 @@ public:
     }
 
     EventLoopHandlerRegistration(
-        repowerd::EventLoop& loop,
+        sensorfw_proxy::EventLoop& loop,
         std::function<void()> const& unregister)
         : HandlerRegistration{[&, unregister] { loop.enqueue(unregister).wait(); }}
     {

@@ -26,7 +26,7 @@ namespace
 auto const null_handler = [](int){};
 }
 
-repowerd::SensorfwCompassSensor::SensorfwCompassSensor(
+sensorfw_proxy::SensorfwCompassSensor::SensorfwCompassSensor(
     std::shared_ptr<Log> const& log,
     std::string const& dbus_bus_address)
     : Sensorfw(log, dbus_bus_address, "Compass", PluginType::COMPASS),
@@ -34,7 +34,7 @@ repowerd::SensorfwCompassSensor::SensorfwCompassSensor(
 {
 }
 
-repowerd::HandlerRegistration repowerd::SensorfwCompassSensor::register_compass_handler(
+sensorfw_proxy::HandlerRegistration sensorfw_proxy::SensorfwCompassSensor::register_compass_handler(
     CompassHandler const& handler)
 {
     return EventLoopHandlerRegistration{
@@ -43,7 +43,7 @@ repowerd::HandlerRegistration repowerd::SensorfwCompassSensor::register_compass_
         [this]{ this->handler = null_handler; }};
 }
 
-void repowerd::SensorfwCompassSensor::enable_compass_events()
+void sensorfw_proxy::SensorfwCompassSensor::enable_compass_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -52,7 +52,7 @@ void repowerd::SensorfwCompassSensor::enable_compass_events()
         }).get();
 }
 
-void repowerd::SensorfwCompassSensor::disable_compass_events()
+void sensorfw_proxy::SensorfwCompassSensor::disable_compass_events()
 {
     dbus_event_loop.enqueue(
         [this]
@@ -61,7 +61,7 @@ void repowerd::SensorfwCompassSensor::disable_compass_events()
         }).get();
 }
 
-void repowerd::SensorfwCompassSensor::data_recived_impl()
+void sensorfw_proxy::SensorfwCompassSensor::data_recived_impl()
 {
     QVector<CompassData> values;
     if (!m_socket->read<CompassData>(values))
