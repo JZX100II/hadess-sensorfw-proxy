@@ -25,4 +25,3 @@ typedef enum {
 #define ORIENTATION_UP_UP ORIENTATION_NORMAL
 
 const char    *orientation_to_string (OrientationUp o);
-OrientationUp  string_to_orientation (const char *orientation);
