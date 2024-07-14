@@ -18,9 +18,6 @@
 
 #include "event_loop.h"
 
-#include <glib-unix.h>
-#include <pthread.h>
-
 namespace
 {
 
@@ -138,68 +135,4 @@ std::future<void> repowerd::EventLoop::enqueue(std::function<void()> const& call
     g_source_unref(gsource);
 
     return future;
-}
-
-std::future<void> repowerd::EventLoop::schedule_in(
-    std::chrono::milliseconds timeout,
-    std::function<void()> const& callback)
-{
-    auto const gsource = g_timeout_source_new(timeout.count());
-    auto const ctx = new GSourceContext{callback};
-    g_source_set_callback(
-            gsource,
-            reinterpret_cast<GSourceFunc>(&GSourceContext::static_call),
-            ctx,
-            reinterpret_cast<GDestroyNotify>(&GSourceContext::static_destroy));
-
-    auto future = ctx->done.get_future();
-
-    g_source_attach(gsource, main_context);
-    g_source_unref(gsource);
-
-    return future;
-}
-
-void repowerd::EventLoop::schedule_with_cancellation_in(
-    std::chrono::milliseconds timeout,
-    std::function<void()> const& callback,
-    std::function<void(EventLoopCancellation const&)> const& cancellation_ready)
-{
-    auto const gsource = g_timeout_source_new(timeout.count());
-    auto const ctx = new GSourceContext{callback};
-    g_source_set_callback(
-            gsource,
-            reinterpret_cast<GSourceFunc>(&GSourceContext::static_call),
-            ctx,
-            reinterpret_cast<GDestroyNotify>(&GSourceContext::static_destroy));
-
-    auto const cancellation =
-        [this, gsource]
-        {
-            g_source_destroy(gsource);
-            g_source_unref(gsource);
-        };
-
-    enqueue(
-        [cancellation, cancellation_ready]
-        {
-            cancellation_ready(cancellation);
-        });
-
-    g_source_attach(gsource, main_context);
-}
-
-void repowerd::EventLoop::watch_fd(
-    int fd, std::function<void()> const& callback)
-{
-    auto const gsource = g_unix_fd_source_new(fd, G_IO_IN);
-    auto const ctx = new GSourceFdContext{callback};
-    g_source_set_callback(
-            gsource,
-            reinterpret_cast<GSourceFunc>(&GSourceFdContext::static_call),
-            ctx,
-            reinterpret_cast<GDestroyNotify>(&GSourceFdContext::static_destroy));
-
-    g_source_attach(gsource, main_context);
-    g_source_unref(gsource);
 }

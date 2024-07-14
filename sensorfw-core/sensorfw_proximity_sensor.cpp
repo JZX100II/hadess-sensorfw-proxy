@@ -21,8 +21,6 @@
 
 #include "socketreader.h"
 
-#include <stdexcept>
-
 namespace
 {
 auto const null_handler = [](repowerd::ProximityState){};
@@ -67,11 +65,10 @@ void repowerd::SensorfwProximitySensor::disable_proximity_events()
 void repowerd::SensorfwProximitySensor::data_recived_impl()
 {
     QVector<ProximityData> values;
-    if(m_socket->read<ProximityData>(values)) {
+    if (m_socket->read<ProximityData>(values))
         m_state = values[0].withinProximity_ ? ProximityState::near : ProximityState::far;
-    } else {
+    else
         m_state = ProximityState::far;
-    }
 
     m_handler(m_state);
 }

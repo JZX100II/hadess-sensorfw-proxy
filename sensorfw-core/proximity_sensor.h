@@ -20,8 +20,6 @@
 
 #include "handler_registration.h"
 
-#include <functional>
-
 namespace repowerd
 {
 
@@ -47,3 +45,4 @@ protected:
 };
 
 }
+

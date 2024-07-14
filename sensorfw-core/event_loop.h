@@ -19,9 +19,7 @@
 #pragma once
 
 #include <thread>
-#include <functional>
 #include <future>
-#include <string>
 
 #include <glib.h>
 
@@ -39,15 +37,6 @@ public:
     void stop();
 
     std::future<void> enqueue(std::function<void()> const& callback);
-    std::future<void> schedule_in(
-        std::chrono::milliseconds, std::function<void()> const& callback);
-
-    void schedule_with_cancellation_in(
-        std::chrono::milliseconds,
-        std::function<void()> const& callback,
-        std::function<void(EventLoopCancellation const&)> const& cancellation_ready);
-
-    void watch_fd(int fd, std::function<void()> const& callback);
 
 protected:
     std::thread loop_thread;

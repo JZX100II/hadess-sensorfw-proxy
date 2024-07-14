@@ -19,7 +19,6 @@
 #include "console_log.h"
 
 #include <cstdarg>
-#include <cstdio>
 #include <ctime>
 #include <string>
 

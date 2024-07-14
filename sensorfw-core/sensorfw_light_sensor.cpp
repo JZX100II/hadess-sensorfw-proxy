@@ -21,8 +21,6 @@
 
 #include "socketreader.h"
 
-#include <stdexcept>
-
 namespace
 {
 auto const null_handler = [](double){};
@@ -66,7 +64,7 @@ void repowerd::SensorfwLightSensor::disable_light_events()
 void repowerd::SensorfwLightSensor::data_recived_impl()
 {
     QVector<TimedUnsigned> values;
-    if(!m_socket->read<TimedUnsigned>(values))
+    if (!m_socket->read<TimedUnsigned>(values))
         return;
 
     handler(values[0].value_);

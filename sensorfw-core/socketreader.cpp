@@ -26,8 +26,6 @@
 
 #include "socketreader.h"
 
-const char* SocketReader::channelIDString = "_SENSORCHANNEL_";
-
 SocketReader::SocketReader(QObject* parent) :
     QObject(parent),
     socket_(NULL),
@@ -37,9 +35,8 @@ SocketReader::SocketReader(QObject* parent) :
 
 SocketReader::~SocketReader()
 {
-    if (socket_) {
+    if (socket_)
         dropConnection();
-    }
 }
 
 bool SocketReader::initiateConnection(int sessionId)
@@ -79,7 +76,7 @@ bool SocketReader::dropConnection()
         return false;
 
     socket_->disconnectFromServer();
-    if(socket_->state() != QLocalSocket::UnconnectedState)
+    if (socket_->state() != QLocalSocket::UnconnectedState)
         socket_->waitForDisconnected();
     delete socket_;
     socket_ = NULL;
@@ -106,12 +103,12 @@ bool SocketReader::read(void* buffer, int size)
 {
     int bytesRead = 0;
     int retry = 100;
-    while(bytesRead < size)
+    while (bytesRead < size)
     {
         int bytes = socket_->read((char *)buffer + bytesRead, size);
-        if(bytes == 0)
+        if (bytes == 0)
         {
-            if(!retry)
+            if (!retry)
                 return false;
             struct timespec ts;
             ts.tv_sec = 0;
@@ -120,14 +117,9 @@ bool SocketReader::read(void* buffer, int size)
             --retry;
             continue;
         }
-        if(bytes < 1)
+        if (bytes < 1)
             return false;
         bytesRead += bytes;
     }
     return (bytesRead > 0);
-}
-
-bool SocketReader::isConnected()
-{
-    return (socket_ && socket_->isValid() && socket_->state() == QLocalSocket::ConnectedState);
 }

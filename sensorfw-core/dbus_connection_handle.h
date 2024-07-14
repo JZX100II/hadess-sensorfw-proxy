@@ -31,8 +31,6 @@ public:
     DBusConnectionHandle(std::string const& address);
     ~DBusConnectionHandle();
 
-    void request_name(char const* name) const;
-
     operator GDBusConnection*() const;
 
 private:

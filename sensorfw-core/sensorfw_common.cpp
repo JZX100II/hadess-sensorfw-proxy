@@ -17,9 +17,6 @@
  */
 
 #include "sensorfw_common.h"
-
-#include <QObject>
-
 #include "socketreader.h"
 
 namespace
@@ -272,35 +269,10 @@ void repowerd::Sensorfw::stop()
             NULL);
 
     if (!result)
-    {
         log->log(log_tag, "failed to stop SensorfwSensor");
-    } else {
+    else
         g_variant_unref(result);
-    }
 
     read_loop.join();
     read_loop = std::thread();
-}
-
-void repowerd::Sensorfw::set_interval(int interval) {
-    int constexpr timeout_default = 100;
-    auto const result =  g_dbus_connection_call_sync(
-            dbus_connection,
-            dbus_sensorfw_name,
-            plugin_path(),
-            plugin_interface(),
-            "setInterval",
-            g_variant_new("(ii)", m_sessionid, interval),
-            NULL,
-            G_DBUS_CALL_FLAGS_NONE,
-            timeout_default,
-            NULL,
-            NULL);
-
-    if (!result)
-    {
-        log->log(log_tag, "set_interval() failed to releaseSensor");
-        return;
-    }
-    g_variant_unref(result);
 }

@@ -21,8 +21,6 @@
 
 #include "socketreader.h"
 
-#include <stdexcept>
-
 namespace
 {
 auto const null_handler = [](int){};
@@ -66,7 +64,7 @@ void repowerd::SensorfwCompassSensor::disable_compass_events()
 void repowerd::SensorfwCompassSensor::data_recived_impl()
 {
     QVector<CompassData> values;
-    if(!m_socket->read<CompassData>(values))
+    if (!m_socket->read<CompassData>(values))
         return;
 
     handler(values[0].degrees_);

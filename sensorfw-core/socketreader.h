@@ -26,9 +26,7 @@
 
 #pragma once
 
-#include <QObject>
 #include <QLocalSocket>
-#include <QVector>
 
 class TimedData
 {
@@ -261,20 +259,7 @@ public:
     template<typename T>
     bool read(QVector<T>& values);
 
-    /**
-     * Returns whether the socket is currently connected.
-     *
-     * @return is socket connected.
-     */
-    bool isConnected();
-
 private:
-    /**
-     * Prefix text needed to be written to the sensor daemon socket connection
-     * when establishing new session.
-     */
-    static const char* channelIDString;
-
     /**
      * Reads initial magic byte from the fresh connection.
      */
@@ -287,24 +272,23 @@ private:
 template<typename T>
 bool SocketReader::read(QVector<T>& values)
 {
-    if (!socket_) {
+    if (!socket_)
         return false;
-    }
 
     unsigned int count;
-    if(!read((void*)&count, sizeof(unsigned int)))
+    if (!read((void*)&count, sizeof(unsigned int)))
     {
         socket_->readAll();
         return false;
     }
-    if(count > 1000)
+    if (count > 1000)
     {
         qWarning() << "Too many samples waiting in socket. Flushing it to empty";
         socket_->readAll();
         return false;
     }
     values.resize(values.size() + count);
-    if(!read((void*)values.data(), sizeof(T) * count))
+    if (!read((void*)values.data(), sizeof(T) * count))
     {
         qWarning() << "Error occured while reading data from socket: " << socket_->errorString();
         socket_->readAll();

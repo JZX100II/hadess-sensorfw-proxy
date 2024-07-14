@@ -21,8 +21,6 @@
 
 #include "socketreader.h"
 
-#include <stdexcept>
-
 namespace
 {
 auto const null_handler = [](repowerd::OrientationData){};
@@ -67,9 +65,8 @@ void repowerd::SensorfwOrientationSensor::data_recived_impl()
 {
     QVector<PoseData> values;
     repowerd::OrientationData output;
-    if(m_socket->read<PoseData>(values)) {
+    if (m_socket->read<PoseData>(values))
         output = (repowerd::OrientationData) values[0].orientation_;
-    }
 
     handler(output);
 }

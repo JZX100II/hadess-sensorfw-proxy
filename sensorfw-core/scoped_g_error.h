@@ -18,9 +18,6 @@
 
 #pragma once
 
-#include <glib.h>
-#include <string>
-
 namespace repowerd
 {
 
@@ -38,11 +35,6 @@ struct ScopedGError
             return g_error->message;
         else
             return {};
-    }
-
-    bool is_set() const
-    {
-        return g_error != nullptr;
     }
 
     operator GError**()

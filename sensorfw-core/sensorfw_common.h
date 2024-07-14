@@ -16,17 +16,12 @@
  * Authored by: Marius Gripsgard <marius@ubports.com>
  */
 
-#include <memory>
-#include <string>
-#include <thread>
-#include <chrono>
+#pragma once
 
 #include "dbus_connection_handle.h"
 #include "dbus_event_loop.h"
 
 #include "log.h"
-
-#pragma once
 
 class SocketReader;
 namespace repowerd {
@@ -50,7 +45,6 @@ public:
 protected:
     virtual void data_recived_impl() = 0;
 
-    void set_interval(int interval = 10);
     void start();
     void stop();
 

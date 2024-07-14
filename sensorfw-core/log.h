@@ -26,7 +26,7 @@ class Log
 public:
     virtual ~Log() = default;
 
-    virtual void log(char const* tag, char const* format, ...) 
+    virtual void log(char const* tag, char const* format, ...)
         __attribute__ ((format (printf, 3, 4))) = 0;
 
 protected:

@@ -51,20 +51,6 @@ class DBusEventLoop : public EventLoop
 {
 public:
     using EventLoop::EventLoop;
-
-    repowerd::HandlerRegistration register_object_handler(
-        GDBusConnection* dbus_connection,
-        char const* dbus_path,
-        char const* introspection_xml,
-        DBusEventLoopMethodCallHandler const& handler);
-
-    repowerd::HandlerRegistration register_signal_handler(
-        GDBusConnection* dbus_connection,
-        char const* dbus_sender,
-        char const* dbus_interface,
-        char const* dbus_member,
-        char const* dbus_path,
-        DBusEventLoopSignalHandler const& handler);
 };
 
 }

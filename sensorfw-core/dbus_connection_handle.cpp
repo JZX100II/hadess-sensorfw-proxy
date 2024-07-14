@@ -20,7 +20,6 @@
 #include "scoped_g_error.h"
 
 #include <stdexcept>
-#include <cstdint>
 
 repowerd::DBusConnectionHandle::DBusConnectionHandle(std::string const& address)
 {
@@ -46,48 +45,6 @@ repowerd::DBusConnectionHandle::DBusConnectionHandle(std::string const& address)
 repowerd::DBusConnectionHandle::~DBusConnectionHandle()
 {
     g_dbus_connection_close_sync(connection, nullptr, nullptr);
-}
-
-void repowerd::DBusConnectionHandle::request_name(char const* name) const
-{
-    static constexpr uint32_t DBUS_NAME_FLAG_DO_NOT_QUEUE = 0x4;
-    static constexpr uint32_t DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER = 0x1;
-
-    repowerd::ScopedGError error;
-    int const timeout_default = -1;
-    auto const null_cancellable = nullptr;
-
-    auto result = g_dbus_connection_call_sync(
-        connection,
-        "org.freedesktop.DBus",
-        "/org/freedesktop/DBus",
-        "org.freedesktop.DBus",
-        "RequestName",
-        g_variant_new("(su)", name, DBUS_NAME_FLAG_DO_NOT_QUEUE),
-        G_VARIANT_TYPE("(u)"),
-        G_DBUS_CALL_FLAGS_NONE,
-        timeout_default,
-        null_cancellable,
-        error);
-
-    if (!result)
-    {
-        throw std::runtime_error(
-            "Failed to request DBus name '" +
-                std::string{name} + "': " + error.message_str());
-    }
-
-    uint32_t request_name_reply{0};
-
-    g_variant_get(result, "(u)", &request_name_reply);
-    g_variant_unref(result);
-
-    if (request_name_reply != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER)
-    {
-        throw std::runtime_error(
-            "Failed to become the primary owner of DBus name '" +
-                std::string{name} + "'");
-    }
 }
 
 repowerd::DBusConnectionHandle::operator GDBusConnection*() const
