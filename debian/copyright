@@ -1,10 +1,11 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: hadess-sensorfw-proxy
-Upstream-Contact: Erfan Abdi <erfangplus@gmail.com>
-Source: https://github.com/droidian/hadess-sensorfw-proxy
+Upstream-Contact: Bardia Moshiri <bardia@furilabs.com>
+Source: https://github.com/furilabs/hadess-sensorfw-proxy
 
 Files: *
 Copyright: 2020 Droidian project, Erfan Abdi <erfangplus@gmail.com>
+           2024 Furi Labs, Bardia Moshiri <bardia@furilabs.com>
 License: GPL-3
 
 License: GPL-3
