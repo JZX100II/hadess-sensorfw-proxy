@@ -1,7 +1,9 @@
 /*
  * Copyright (c) 2014-2020 Bastien Nocera <hadess@hadess.net>
  *                         Erfan Abdi <erfangplus@gmail.com>
- * 
+ *
+ * Copyright (c) 2024      Bardia Moshiri <bardia@furilabs.com>
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3 as published by
  * the Free Software Foundation.
@@ -798,14 +800,19 @@ int main (int argc, char **argv)
 	repowerd::HandlerRegistration light_registration;
 	repowerd::HandlerRegistration orientation_registration;
 	repowerd::HandlerRegistration compass_registration;
-	if (data->prox_avaliable == TRUE) {
+
+	if (data->prox_avaliable && data->proximity_sensor) {
 		prox_registration = data->proximity_sensor->register_proximity_handler(
 			[data](repowerd::ProximityState state) {
 				data->previous_prox_near = (state == repowerd::ProximityState::near);
 				send_dbus_event(data, PROP_PROXIMITY_NEAR);
 			});
+	} else if (data->prox_avaliable) {
+		g_warning("Proximity sensor marked as available but sensor is null");
+		data->prox_avaliable = FALSE;
 	}
-	if (data->light_avaliable == TRUE) {
+
+	if (data->light_avaliable && data->light_sensor) {
 		light_registration = data->light_sensor->register_light_handler(
 			[data](double light) {
 				if (data->previous_level != light) {
@@ -813,8 +820,12 @@ int main (int argc, char **argv)
 					send_dbus_event(data, PROP_LIGHT_LEVEL);
 				}
 			});
+	} else if (data->light_avaliable) {
+		g_warning("Light sensor marked as available but sensor is null");
+		data->light_avaliable = FALSE;
 	}
-	if (data->prox_avaliable == TRUE) {
+
+	if (data->accel_avaliable && data->orientation_sensor) {
 		orientation_registration = data->orientation_sensor->register_orientation_handler(
 			[data](repowerd::OrientationData value) {
 				OrientationUp orientation = data->previous_orientation;
@@ -845,8 +856,12 @@ int main (int argc, char **argv)
 					send_dbus_event(data, PROP_ACCELEROMETER_ORIENTATION);
 				}
 			});
+	} else if (data->accel_avaliable) {
+		g_warning("Accelerometer marked as available but sensor is null");
+		data->accel_avaliable = FALSE;
 	}
-	if (data->compass_avaliable == TRUE) {
+
+	if (data->compass_avaliable && data->compass_sensor) {
 		compass_registration = data->compass_sensor->register_compass_handler(
 			[data](int heading) {
 				if (data->previous_heading != heading) {
@@ -854,7 +869,11 @@ int main (int argc, char **argv)
 					send_dbus_event(data, PROP_COMPASS_HEADING);
 				}
 			});
+	} else if (data->compass_avaliable) {
+		g_warning("Compass sensor marked as available but sensor is null");
+		data->compass_avaliable = FALSE;
 	}
+
 	data->loop = g_main_loop_new (NULL, TRUE);
 	g_main_loop_run (data->loop);
 	ret = data->ret;
