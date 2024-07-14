@@ -10,15 +10,6 @@
  *
  */
 
-#include <iostream>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <gio/gio.h>
 #include <gudev/gudev.h>
 
 #include "orientation.h"
