@@ -17,14 +17,11 @@ add_library(
 )
 
 target_link_libraries(sensorfw-core PUBLIC
-    Qt6::Core
     Qt6::Network
 
-    ${GIO_LDFLAGS} ${GIO_LIBRARIES}
-    ${GIO_UNIX_LDFLAGS} ${GIO_UNIX_LIBRARIES}
+    ${GIO_LDFLAGS}
 )
 
 target_include_directories(sensorfw-core PUBLIC
     ${GIO_INCLUDE_DIRS}
-    ${GIO_UNIX_INCLUDE_DIRS}
 )
