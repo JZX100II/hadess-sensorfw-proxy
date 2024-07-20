@@ -53,6 +53,7 @@ typedef struct {
 
 	/* Light */
 	gdouble previous_level;
+	gdouble previous_level_accumulator; // light level smoothing
 	gboolean uses_lux;
 	gboolean light_avaliable;
 	std::shared_ptr<sensorfw_proxy::LightSensor> light_sensor;
@@ -274,6 +275,8 @@ send_dbus_event_for_client (SensorData     *data,
 				       g_variant_new_string (data->uses_lux ? "lux" : "vendor"));
 		g_variant_builder_add (&props_builder, "{sv}", "LightLevel",
 				       g_variant_new_double (data->previous_level));
+		g_variant_builder_add (&props_builder, "{sv}", "LightLevelAccumulator",
++                                      g_variant_new_double (data->previous_level_accumulator));
 	}
 
 	if (mask & PROP_HAS_COMPASS) {
@@ -516,6 +519,8 @@ handle_get_property (GDBusConnection *connection,
 		return g_variant_new_string (data->uses_lux ? "lux" : "vendor");
 	if (g_strcmp0 (property_name, "LightLevel") == 0)
 		return g_variant_new_double (data->previous_level);
+	if (g_strcmp0 (property_name, "LightLevelAccumulator") == 0)
++               return g_variant_new_double (data->previous_level_accumulator);
 	if (g_strcmp0 (property_name, "HasProximity") == 0)
 		return g_variant_new_boolean (driver_type_exists (data, DRIVER_TYPE_PROXIMITY));
 	if (g_strcmp0 (property_name, "ProximityNear") == 0)
@@ -804,9 +809,15 @@ int main (int argc, char **argv)
 	}
 
 	if (data->light_avaliable && data->light_sensor) {
+		static double light_accumulator = 0.0f;
+		static double alpha = 0.5f;
+
 		light_registration = data->light_sensor->register_light_handler(
 			[data](double light) {
 				if (data->previous_level != light) {
+                    light_accumulator = (1 - alpha) * light_accumulator + alpha * light;
+                    data->previous_level_accumulator = light_accumulator;
+
 					data->previous_level = light;
 					send_dbus_event(data, PROP_LIGHT_LEVEL);
 				}
